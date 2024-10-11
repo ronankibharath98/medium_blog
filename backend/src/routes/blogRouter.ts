@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-import { decode, sign, verify } from 'hono/jwt'
+import { verify } from 'hono/jwt'
+import { createBlogInput, updateBlogInput } from '@bronanki/medium-common'
 
 export const blogRouter = new Hono<{
     Bindings: {
@@ -12,13 +13,15 @@ export const blogRouter = new Hono<{
         userId: string;
     }
 }>()
+
+// Middleware to check authorization
 blogRouter.use('/*', async (c, next) => {
     try {
         const token = c.req.header("authorization") || "";
         const user = await verify(token, c.env.JWT_SECRET);
         if (user){
             c.set("userId", user.id as string);
-            next();
+            await next();
         }else{
             c.status(403);
             return c.json({
@@ -34,14 +37,34 @@ blogRouter.use('/*', async (c, next) => {
         })
     }
 })
+
+// Post blog route 
 blogRouter.post('/', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
-
+    const body = await c.req.json();
+    const success = createBlogInput.safeParse(body)
+    if(!success){
+        c.status(400)
+        return c.json({
+            message: "Input not correct"
+        })
+    }
     try {
-        const body = await c.req.json();
         const authorId = c.get("userId")
+        const existingBlog = await prisma.blog.findFirst({
+            where: {
+                title : body.title,
+                content : body.content,
+                authorId: authorId
+            }
+        })
+        if(existingBlog){
+            return c.json({
+                message: "A blog with the same title and content already posted by you"
+            })
+        }
         const blog = await prisma.blog.create({
             data: {
                 title: body.title,
@@ -62,8 +85,15 @@ blogRouter.put('/', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
+    const body = await c.req.json();
+    const success = updateBlogInput.safeParse(body)
+    if(!success){
+        c.status(400)
+        return c.json({
+            message: "Input not correct"
+        })
+    }
     try {
-        const body = await c.req.json();
         const blog = await prisma.blog.update({
             where: {
                 id: body.id
@@ -81,15 +111,31 @@ blogRouter.put('/', async (c) => {
         return c.status(411)
     }
 })
+blogRouter.get('/bulk', async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+
+    const blogs = await prisma.blog.findMany();
+    
+    if(blogs.length < 1){
+        return c.json({
+            message: "No blogs to show"
+        })
+    }
+    return c.json({
+        blogs
+    })
+})
 blogRouter.get('/:id', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
-    const body = await c.req.json();
+    
     try {
         const blog = await prisma.blog.findFirst({
             where: {
-                id: body.id
+                id: c.req.param('id')
             }
         })
         return c.json({
@@ -98,16 +144,4 @@ blogRouter.get('/:id', async (c) => {
     } catch (error) {
         return c.status(411)
     }
-})
-blogRouter.get('/bulk', async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL
-    }).$extends(withAccelerate())
-
-    const blogs = await prisma.blog.findMany();
-
-    return c.json({
-        blogs
-    })
-    return c.text('Hi from get bulk blogs')
 })
