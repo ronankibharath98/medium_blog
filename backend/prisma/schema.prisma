@@ -21,6 +21,7 @@ model Blog {
   title     String   
   content   String
   thumbnail String?
+  tag       String?
   published Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
