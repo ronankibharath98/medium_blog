@@ -5,11 +5,12 @@
     "deploy": "wrangler deploy --minify"
   },
   "dependencies": {
-    "@bronanki/medium-common": "^1.0.1",
+    "@bronanki/medium-common": "^1.0.4",
     "@prisma/client": "^5.20.0",
     "@prisma/extension-accelerate": "^1.2.1",
     "hono": "^4.6.3",
-    "prisma": "^5.20.0"
+    "prisma": "^5.20.0",
+    "psql": "^0.0.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240925.0",

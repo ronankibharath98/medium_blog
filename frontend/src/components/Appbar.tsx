@@ -1,13 +1,13 @@
-import { Avatar } from "./BlogCard"
+import { Avatar } from "./BlogsCard"
 
 export const Appbar = () => {
     return (
-        <div className="px-5 py-2 flex justify-between">
-            <div className="font-bold text-3xl cursor-pointer">
+        <div className="border-b border-slate-200 px-10 py-2 flex justify-between">
+            <div className="font-bold text-3xl cursor-pointer flex flex-col justify-center">
                 Medium
             </div>
-            <div className="flex space-x-3">
-                <div className="flex justify-center flex-col border rounded-full px-2 text-xs bg-green-600 text-slate-50">
+            <div className="flex items-center space-x-4">
+                <div className="text-xs border rounded-full p-2 bg-green-600 text-slate-50">
                     <button>Publish</button>
                 </div>
                 <div>
@@ -21,9 +21,11 @@ export const Appbar = () => {
                     </svg>
                 </div>
                 <div>
-                    <Avatar name="Bharath Ronanki" />
+                    <Avatar size="big" name="Bharath Ronanki" />
                 </div>
+                <div className="border-b border-slate-200 ">
 
+                </div>
             </div>
         </div>
     )

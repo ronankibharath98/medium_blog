@@ -13,7 +13,8 @@ export const singinInput = z.object({
 
 export const createBlogInput = z.object({
     title: z.string(),
-    content: z.string()
+    content: z.string(),
+    tag: z.string()
 })
 
 export const updateBlogInput = z.object({

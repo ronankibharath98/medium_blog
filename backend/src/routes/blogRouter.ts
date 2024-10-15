@@ -56,25 +56,25 @@ blogRouter.post('/', async (c) => {
         const existingBlog = await prisma.blog.findFirst({
             where: {
                 title : body.title,
-                content : body.content,
-                authorId: authorId
+                content : body.content
             }
         })
         if(existingBlog){
             return c.json({
-                message: "A blog with the same title and content already posted by you"
+                message: "A blog with the same title and content already exists"
             })
         }
         const blog = await prisma.blog.create({
             data: {
                 title: body.title,
                 content: body.content,
+                tag: body.tag || null, 
                 authorId: authorId
             }
         })
         return c.json({
             message: "Blog uploaded successfully",
-            id: blog.id
+            blog
         })
     } catch (error) {
         console.log(error)
@@ -101,11 +101,12 @@ blogRouter.put('/', async (c) => {
             data: {
                 title: body.title,
                 content: body.content,
+                tag: body.tag || null,
             }
         })
         return c.json({
             message: "Blog updated successfully",
-            id: blog.id
+            blog
         })
     } catch (error) {
         return c.status(411)
@@ -116,7 +117,20 @@ blogRouter.get('/bulk', async (c) => {
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
 
-    const blogs = await prisma.blog.findMany();
+    const blogs = await prisma.blog.findMany({
+        select : {
+            id: true,
+            title: true,
+            content: true,
+            thumbnail: true,
+            tag: true,
+            author: {
+                select : {
+                    name: true
+                }
+            }
+        }
+    });
     
     if(blogs.length < 1){
         return c.json({
