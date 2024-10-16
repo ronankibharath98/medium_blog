@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Avatar } from "./BlogsCard"
 
 export const Appbar = () => {
@@ -8,7 +9,9 @@ export const Appbar = () => {
             </div>
             <div className="flex items-center space-x-4">
                 <div className="text-xs border rounded-full p-2 bg-green-600 text-slate-50">
-                    <button>Publish</button>
+                    <Link to={"/publish"}>
+                    <button >Publish</button>
+                    </Link>
                 </div>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="rgb(100 116 139)" className="size-6">
@@ -21,7 +24,7 @@ export const Appbar = () => {
                     </svg>
                 </div>
                 <div>
-                    <Avatar size="big" name="Bharath Ronanki" />
+                    <Avatar size="l" name="Bharath Ronanki" />
                 </div>
                 <div className="border-b border-slate-200 ">
 

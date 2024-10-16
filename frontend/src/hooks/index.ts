@@ -25,7 +25,6 @@ export const useBlog = ( {id} : {id: string} ) => {
                         Authorization: localStorage.getItem("token"),
                     }
                 })
-                console.log(response.data)
                 setBlog(response.data.blog)
                 setLoading(false)
             } catch (error) {

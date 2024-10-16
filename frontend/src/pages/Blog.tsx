@@ -8,7 +8,6 @@ export const Blog = () => {
     const {loading, blog} = useBlog({
         id: String(id || "")
     });
-    console.log(blog, id)
     if(loading){
         return(
             <div>

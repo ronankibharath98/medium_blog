@@ -15,13 +15,13 @@ export const BlogsCard = ({ id, author, title, content, publishedDate, tag }: Bl
             <div className="p-4 border-b borderc-slate-200 pb-4">
                 <div className="flex items-center space-x-2">
                     <div className="flex justify-center flex-col">
-                        <Avatar size="small" name={author} />
+                        <Avatar size="sm" name={author} />
                     </div>
                     <div className=" text-sm font-medium text-slate-700">
                         {author}
                     </div>
                     <div className="flex justify-center flex-col">
-                        <CircleComp />
+                        <CircleComp h={1} w={1}/>
                     </div>
                     <div className="text-sm text-slate-500">
                         {publishedDate}
@@ -66,22 +66,32 @@ export const BlogsCard = ({ id, author, title, content, publishedDate, tag }: Bl
     )
 }
 
-const CircleComp = () => {
+export const CircleComp = ({h = 1, w = 1}: {h: number, w:number}) => {
     return (
-        <div className="h-1 w-1 rounded-full bg-slate-500">
+        <div className={`h-${h} w-${w} rounded-full bg-slate-500`}>
         </div>
     )
 }
 
-export const Avatar = ({ name, size = "small" }: { name: string, size: "small" | "big" }) => {
+export const Avatar = ({ name, size = "sm" }: { name: string, size: "sm" | "l" | "xl"}) => {
+    // Defined size-based classes
+    const sizeClasses = {
+        sm: "w-6 h-6 text-xs",
+        l: "w-9 h-9 text-md",
+        xl: "w-11 h-11 text-lg" // We can customize the sizes and font classes as needed
+    };
+
+    // Get the appropriate class based on size prop
+    const selectedSizeClass = sizeClasses[size];
+
     return (
-        <div className={`relative inline-flex items-center justify-center ${size == "small" ? "w-6 h-6" : "w-10 h-10"}  overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600 cursor-pointer`}>
-            <span className={`font-normal ${size == "small" ? "text-xs" : "text-md"} text-gray-600 dark:text-gray-300`}>
+        <div className={`relative inline-flex items-center justify-center ${selectedSizeClass} overflow-hidden bg-gray-200 rounded-full dark:bg-gray-600 cursor-pointer`}>
+            <span className={`font-normal text-gray-600 dark:text-gray-300`}>
                 {
                     name.split(" ").length > 1 ? name.split(" ")[0].charAt(0) + name.split(" ")[1].charAt(0)
-                        : name.split("")[0]
+                        : name.charAt(0)
                 }
             </span>
         </div>
-    )
+    );
 }
