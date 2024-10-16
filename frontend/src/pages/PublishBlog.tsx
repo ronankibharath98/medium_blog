@@ -9,7 +9,7 @@ export const PublishBlog = () => {
     const [content, setContent] = useState("")
     const navigate = useNavigate()
 
-    const handleOnChange = (e) => {
+    const handleOnChange = (e : ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name == "title") {
             setTitle(value)
@@ -27,7 +27,8 @@ export const PublishBlog = () => {
                     Authorization: localStorage.getItem("token")
                 }
             })
-            navigate(`/blog/${response.data.id}`)
+            // console.log(response)
+            navigate(`/blog/${response.data.blog.id}`)
         } catch (error) {
             console.log("", error)
         }

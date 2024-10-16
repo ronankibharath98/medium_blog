@@ -73,7 +73,7 @@ export const CircleComp = ({h = 1, w = 1}: {h: number, w:number}) => {
     )
 }
 
-export const Avatar = ({ name, size = "sm" }: { name: string, size: "sm" | "l" | "xl"}) => {
+export const Avatar = ({ name, size = "sm" }: { name: string, size?: "sm" | "l" | "xl"}) => {
     // Defined size-based classes
     const sizeClasses = {
         sm: "w-6 h-6 text-xs",

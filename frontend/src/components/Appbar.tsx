@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Avatar } from "./BlogsCard"
 
 export const Appbar = () => {
+    const navigate = useNavigate()
     return (
         <div className="border-b border-slate-200 px-10 py-2 flex justify-between">
-            <div className="font-bold text-3xl cursor-pointer flex flex-col justify-center">
+            <div onClick={()=>navigate('/blogs')} className="font-bold text-3xl cursor-pointer flex flex-col justify-center">
                 Medium
             </div>
             <div className="flex items-center space-x-4">
