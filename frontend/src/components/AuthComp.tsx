@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react"
 import { SignupInput } from "@bronanki/medium-common"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
-import { BACKEND_URL } from "../config"
+
 
 
 export const Auth = ({type}:{type: "signin" | "signup"}) => {
@@ -15,7 +15,7 @@ export const Auth = ({type}:{type: "signin" | "signup"}) => {
 
     const handleSubmit = async() => {
         try {
-            const response = await axios.post(`${BACKEND_URL}/api/v1/user${type === "signin" ? '/signin' : '/signup'}`, postInputs)
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user${type === "signin" ? '/signin' : '/signup'}`, postInputs)
             const jwt = response.data.jwt
             localStorage.setItem("token", jwt)
             navigate("/blogs")

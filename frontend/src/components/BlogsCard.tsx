@@ -10,6 +10,13 @@ interface BlogCardProps {
 }
 
 export const BlogsCard = ({ id, author, title, content, publishedDate, tag }: BlogCardProps) => {
+    const date = new Date(publishedDate)
+    const options: Intl.DateTimeFormatOptions ={ 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+    };
+    const formattedDate = date.toLocaleDateString('en-US', options);
     return (
         <Link to={`/blog/${id}`}>
             <div className="p-4 border-b borderc-slate-200 pb-4">
@@ -24,7 +31,7 @@ export const BlogsCard = ({ id, author, title, content, publishedDate, tag }: Bl
                         <CircleComp h={1} w={1}/>
                     </div>
                     <div className="text-sm text-slate-500">
-                        {publishedDate}
+                        {formattedDate}
                     </div>
                 </div>
                 <div className="mt-2 font-bold text-2xl">
@@ -80,7 +87,6 @@ export const Avatar = ({ name, size = "sm" }: { name: string, size?: "sm" | "l" 
         l: "w-9 h-9 text-md",
         xl: "w-11 h-11 text-lg" // We can customize the sizes and font classes as needed
     };
-
     // Get the appropriate class based on size prop
     const selectedSizeClass = sizeClasses[size];
 

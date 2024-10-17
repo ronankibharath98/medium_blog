@@ -2,7 +2,6 @@ import { ChangeEvent, useState } from "react"
 import { Appbar } from "../components/Appbar"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import { BACKEND_URL } from "../config"
 
 export const PublishBlog = () => {
     const [title, setTitle] = useState("")
@@ -19,7 +18,7 @@ export const PublishBlog = () => {
     }
     const handleOnClick = async () => {
         try {
-            const response = await axios.post(`${BACKEND_URL}/api/v1/blog`, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`, {
                 title: title,
                 content: content
             }, {

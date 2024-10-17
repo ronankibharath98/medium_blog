@@ -32,7 +32,7 @@ export const Blogs = () => {
                             author={blog.author.name}
                             title={blog.title}
                             content={blog.content}
-                            publishedDate="Oct 3 2024"
+                            publishedDate={blog.updatedAt}
                             tag={blog.tag || "nottagged"} />
                     )}
                 </div>

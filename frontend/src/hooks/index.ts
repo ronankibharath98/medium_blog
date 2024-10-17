@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { BACKEND_URL } from "../config"
 import axios from "axios"
 
 export interface Blog {
@@ -8,6 +7,7 @@ export interface Blog {
     "content": string
     "thumbnail": string
     "tag": string
+    "updatedAt": string
     "author": {
         "name": string
     }
@@ -20,7 +20,7 @@ export const useBlog = ( {id} : {id: string} ) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog/${id}`, {
                     headers:{
                         Authorization: localStorage.getItem("token"),
                     }
@@ -48,7 +48,7 @@ export const useBlogs = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog/bulk`, {
                     headers:{
                         Authorization: localStorage.getItem("token"),
                     }

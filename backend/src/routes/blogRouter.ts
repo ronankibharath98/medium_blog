@@ -9,7 +9,7 @@ export const blogRouter = new Hono<{
         DATABASE_URL: string;
         JWT_SECRET: string;
     },
-    Variables:{
+    Variables: {
         userId: string;
     }
 }>()
@@ -19,10 +19,10 @@ blogRouter.use('/*', async (c, next) => {
     try {
         const token = c.req.header("authorization") || "";
         const user = await verify(token, c.env.JWT_SECRET);
-        if (user){
+        if (user) {
             c.set("userId", user.id as string);
             await next();
-        }else{
+        } else {
             c.status(403);
             return c.json({
                 message: "You are not logged in"
@@ -33,7 +33,7 @@ blogRouter.use('/*', async (c, next) => {
         console.log(error);
         return c.json({
             message: "There is a error in authorization middleware"
-            
+
         })
     }
 })
@@ -45,7 +45,7 @@ blogRouter.post('/', async (c) => {
     }).$extends(withAccelerate())
     const body = await c.req.json();
     const success = createBlogInput.safeParse(body)
-    if(!success){
+    if (!success) {
         c.status(400)
         return c.json({
             message: "Input not correct"
@@ -55,11 +55,10 @@ blogRouter.post('/', async (c) => {
         const authorId = c.get("userId")
         const existingBlog = await prisma.blog.findFirst({
             where: {
-                title : body.title,
-                content : body.content
+                title: body.title
             }
         })
-        if(existingBlog){
+        if (existingBlog) {
             return c.json({
                 message: "A blog with the same title and content already exists"
             })
@@ -68,13 +67,23 @@ blogRouter.post('/', async (c) => {
             data: {
                 title: body.title,
                 content: body.content,
-                tag: body.tag || null, 
+                tag: body.tag || null,
                 authorId: authorId
+            },
+            include: {
+                author: {
+                    select: {
+                        name: true
+                    }
+                },
             }
-        })
+        });
         return c.json({
             message: "Blog uploaded successfully",
-            blog
+            blog: {
+                ...blog,
+                author: blog.author.name
+            }
         })
     } catch (error) {
         console.log(error)
@@ -87,7 +96,7 @@ blogRouter.put('/', async (c) => {
     }).$extends(withAccelerate())
     const body = await c.req.json();
     const success = updateBlogInput.safeParse(body)
-    if(!success){
+    if (!success) {
         c.status(400)
         return c.json({
             message: "Input not correct"
@@ -118,21 +127,22 @@ blogRouter.get('/bulk', async (c) => {
     }).$extends(withAccelerate())
 
     const blogs = await prisma.blog.findMany({
-        select : {
+        select: {
             id: true,
             title: true,
             content: true,
             thumbnail: true,
             tag: true,
+            updatedAt: true,
             author: {
-                select : {
+                select: {
                     name: true
                 }
             }
         }
     });
-    
-    if(blogs.length < 1){
+
+    if (blogs.length < 1) {
         return c.json({
             message: "No blogs to show"
         })
@@ -145,11 +155,23 @@ blogRouter.get('/:id', async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
-    
+
     try {
         const blog = await prisma.blog.findFirst({
             where: {
                 id: c.req.param('id')
+            },
+            select: {
+                title: true,
+                content: true,
+                thumbnail: true,
+                tag: true,
+                updatedAt: true,
+                author: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
         return c.json({

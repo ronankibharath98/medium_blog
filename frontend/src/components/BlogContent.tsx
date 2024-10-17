@@ -2,6 +2,13 @@ import { Blog } from "../hooks"
 import { Avatar, CircleComp } from "./BlogsCard"
 
 export const BlogContent = ({ blog }: { blog: Blog }) => {
+    const date = new Date(blog.updatedAt)
+    const options: Intl.DateTimeFormatOptions ={ 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+    };
+    const formattedDate = date.toLocaleDateString('en-US', options);
     return (
         <div>
             <div className="mt-10 font-bold text-4xl">
@@ -28,7 +35,7 @@ export const BlogContent = ({ blog }: { blog: Blog }) => {
                             {Math.ceil(blog.content.length / 100)} min read
                         </div>
                         <div className="text-sm text-slate-500">
-                            Apr 23,2024
+                            {formattedDate}
                         </div>
                     </div>
                 </div>
@@ -70,13 +77,9 @@ export const BlogContent = ({ blog }: { blog: Blog }) => {
 
                     </div>
                 </div>
-
             </div>
             <div>
                 {blog.content}
-            </div>
-            <div>
-                Follow
             </div>
         </div>
     )
