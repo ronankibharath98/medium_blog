@@ -33,7 +33,7 @@ userRouter.post('/signup', async (c) => {
         password: body.password
       }
     })
-
+    
     const token = await sign({ id: user.id }, c.env.JWT_SECRET)
 
     return c.json({
@@ -41,7 +41,7 @@ userRouter.post('/signup', async (c) => {
       message: "Signed up"
     })
   } catch (error) {
-    c.status(409);
+    c.status(411);
     return c.text("Invalid Input, Please try again")
   }
 })

@@ -2,11 +2,13 @@ import { ChangeEvent, useState } from "react"
 import { SignupInput } from "@bronanki/medium-common"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { Spinner } from "./Spinner"
 
 
 
 export const Auth = ({type}:{type: "signin" | "signup"}) => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
     const [postInputs, setPostInputs] = useState<SignupInput>({
         name: "",
         email: "",
@@ -14,16 +16,29 @@ export const Auth = ({type}:{type: "signin" | "signup"}) => {
     })
 
     const handleSubmit = async() => {
+        setLoading(true)
         try {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user${type === "signin" ? '/signin' : '/signup'}`, postInputs)
             const jwt = response.data.jwt
             localStorage.setItem("token", jwt)
+            setLoading(false)
             navigate("/blogs")
-        } catch (error) {
-            
+        } catch (error : any) {
+            console.log(error)
+            alert(error.response.data)
         }
     }
+    if(loading){
+        return(
+            <div className="h-screen flex flex-col">
+                <div className="flex justify-center items-center flex-1">
+                    <Spinner/>
+                </div>
 
+            </div>
+            
+        )
+    }
     return (
         <div className="flex justify-center h-screen">
             <div className="flex flex-col text-center justify-center">
