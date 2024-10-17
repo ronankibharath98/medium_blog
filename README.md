@@ -6,7 +6,7 @@ This repository contains the code for the Medium Blog Project.
 
 You can access the live deployment of this project using the following link:
 
-[Deployment Link](https://github.com/ronankibharath98/medium_blog/tree/main)
+[Deployment Link](https://medium-blog-eight-green.vercel.app/signup)
 
 ## Features
 
